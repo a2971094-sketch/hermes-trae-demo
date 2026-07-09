@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+app/__init__.py
+app/main.py
+hermes_trae_demo.egg-info/PKG-INFO
+hermes_trae_demo.egg-info/SOURCES.txt
+hermes_trae_demo.egg-info/dependency_links.txt
+hermes_trae_demo.egg-info/requires.txt
+hermes_trae_demo.egg-info/top_level.txt
+tests/test_main.py
