@@ -1,6 +1,6 @@
 """请求/响应 Schema"""
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class RegisterRequest(BaseModel):
@@ -28,3 +28,16 @@ class LoginResponse(BaseModel):
 
 class RefreshResponse(BaseModel):
     access_token: str
+
+
+class UserResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: int
+    username: str
+    role: str
+    created_at: str
+
+
+class UserListResponse(BaseModel):
+    users: list[UserResponse]

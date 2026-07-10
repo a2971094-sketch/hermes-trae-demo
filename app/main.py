@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 
 from app.database import Base, engine
-from app.routers import router as auth_router
+from app.routers import auth_router, users_router, admin_router
 
 # 创建所有表
 Base.metadata.create_all(bind=engine)
@@ -15,6 +15,8 @@ app = FastAPI(
 )
 
 app.include_router(auth_router)
+app.include_router(users_router)
+app.include_router(admin_router)
 
 
 @app.get("/")
