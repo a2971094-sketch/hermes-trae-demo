@@ -1,4 +1,4 @@
-"""认证路由 — 注册/登录/刷新"""
+"""认证路由 — 注册/登录/刷新 + 用户资料"""
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -12,6 +12,8 @@ from app.schemas import (
     LoginResponse,
     RefreshRequest,
     RefreshResponse,
+    UserProfileUpdateRequest,
+    UserProfileResponse,
 )
 from app.auth import (
     hash_password,
@@ -19,9 +21,11 @@ from app.auth import (
     create_access_token,
     create_refresh_token,
     decode_token,
+    get_current_user_id,
 )
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
+users_router = APIRouter(prefix="/api/users", tags=["users"])
 
 
 def get_db():
@@ -87,3 +91,29 @@ def refresh(body: RefreshRequest):
         "role": payload["role"],
     }
     return RefreshResponse(access_token=create_access_token(token_data))
+
+
+@users_router.put("/me", response_model=UserProfileResponse)
+def update_profile(
+    body: UserProfileUpdateRequest,
+    user_id: int = Depends(get_current_user_id),
+    db: Session = Depends(get_db),
+):
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="用户不存在")
+
+    if body.nickname is not None:
+        user.nickname = body.nickname
+    if body.avatar_url is not None:
+        user.avatar_url = body.avatar_url
+
+    db.commit()
+    db.refresh(user)
+    return UserProfileResponse(
+        id=user.id,
+        username=user.username,
+        nickname=user.nickname,
+        avatar_url=user.avatar_url,
+        role=user.role,
+    )

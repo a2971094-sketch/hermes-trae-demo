@@ -28,3 +28,16 @@ class LoginResponse(BaseModel):
 
 class RefreshResponse(BaseModel):
     access_token: str
+
+
+class UserProfileUpdateRequest(BaseModel):
+    nickname: str | None = Field(None, max_length=100)
+    avatar_url: str | None = Field(None, max_length=500)
+
+
+class UserProfileResponse(BaseModel):
+    id: int
+    username: str
+    nickname: str | None
+    avatar_url: str | None
+    role: str
