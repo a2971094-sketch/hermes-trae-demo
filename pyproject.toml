@@ -17,6 +17,19 @@ dependencies = [
 dev = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.24.0",
+    "pytest-cov>=5.0.0",
     "black>=24.0.0",
     "ruff>=0.6.0",
 ]
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+# B008: FastAPI 的 Depends() 必须写在参数默认值中
+ignore = ["B008"]
